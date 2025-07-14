@@ -1,0 +1,159 @@
+{
+  "name": "OCEAN Tatkal Autofill",
+  "description": "An auto fill service to help booking train tickets by automating form filling in IRCTC website.",
+  "version": "1.8.3",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "OCEAN TATKAL"
+  },
+  "icons": {
+    "16": "rail_128.png",
+    "32": "rail_128.png",
+    "48": "rail_128.png",
+    "128": "rail_128.png"
+  },
+  "background": {
+    "service_worker": "background_script.js"
+  },
+  "permissions": [
+    "scripting",
+    "tabs",
+    "storage",
+    "proxy",
+    "webRequest",
+    "webRequestAuthProvider",
+    "offscreen",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "wss://api.verifyotp.xyz",
+    "https://www.irctc.co.in/*",
+    "https://683f-43-240-4-108.ngrok-free.app/*",
+    "https://script.google.com/*",
+    "https://script.googleusercontent.com/*",
+    "https://raw.githubusercontent.com/*",
+    "https://iambts.in/*",
+    
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "js": ["ad_blocker_cosmetic.js"],
+      "matches": ["https://www.irctc.co.in/*"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "js": ["Payments/irctc_upi.js"],
+      "matches": ["https://www.irctcipay.com/pgui/jsp/*"]
+    },
+    {
+      "js": ["Payments/irctc_dc.js"],
+      "matches": ["https://www.irctcipay.com/pgui/jsp/*"]
+    },
+    {
+      "js": ["Payments/phonepe_upi.js"],
+      "matches": ["https://mercury-t2.phonepe.com/*"]
+    },
+    {
+      "js": ["Payments/payu_upi.js"],
+      "matches": ["https://api.payu.in/*", "https://checkout.payu.in/*"]
+    },
+    {
+      "js": ["Payments/amazonpay_wallet.js"],
+      "matches": ["https://www.amazon.in/*", "https://www.amazon.in/pay-checkout/*"]
+    },
+
+      {
+  "js": ["Payments/sbi_netbanking.js", "Payments/otp_handler.js"],
+  "matches": ["https://retail.onlinesbi.sbi/*", "https://corp.onlinesbi.sbi/*", "https://merchant.onlinesbi.sbi/*"] 
+     },
+     
+
+     {
+      "js": ["Payments/hdfc_NB.js", "Payments/otp_handler.js"],
+      "matches": ["https://shopping.icicibank.com/*"]
+    },
+
+    {
+      "js": ["Payments/paytm_upi.js"],
+      "matches": ["https://secure.paytmpayments.com/*"]
+    },
+
+   {
+      "js": ["Payments/mobikwik_wallet.js", "Payments/otp_handler.js"],
+      "matches": ["https://walletapi.mobikwik.com/*"]
+    },
+    {
+  "js": ["Payments/razorpay_upi.js"],
+  "matches": [
+    "https://checkout.razorpay.com/*",
+    "https://checkout.razorpay.com/orders/*",
+    "https://checkout.razorpay.com/orders/order",
+    "https://api.razorpay.com/v1/checkout/public*" 
+  ],
+  "all_frames": true
+},
+    {
+      "js": [
+        "lib/service-worker.bundle.js",
+        "lib/index.bundle.js",
+        "lib/index.bundle ocr.js",
+        "Payments/hdfc_pay.js"
+      ],
+      "matches": ["https://hdfcbankpayments.hdfcbank.com/*"]
+    },
+    {
+      "js": ["Payments/kotak_dc.js"],
+      "matches": ["https://allpaypg.kotak.com/*", "https://allpaypg.kotak.com/ISGPay-Genius/request.action/*"],
+      "all_frames": true
+    },
+
+
+    {
+      "js": ["Payments/icici_dc.js"],
+      "matches": ["https://www4.ipg-online.com/*", "https://www4.ipg-online.com/connect/*"],
+      "all_frames": true
+    },
+
+
+
+
+    {
+      "js": ["Payments/secure_hdfc.js"],
+      "matches": [
+        "https://securehdfc-acs2ui-b1-indmum-mumsif.hdfcbank.com/*",
+        "*://*.hdfcbank.com/*",
+        "https://centinelapi.cardinalcommerce.com/*",
+        "https://www.cashfree.com/*"
+      ],
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "animation.js",
+        "animation.css",
+        "offscreen.html",
+        "otp_handler.js",
+        "firebase_sdk/firebase-app.js",
+        "firebase_sdk/firebase-database.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
+}
+  

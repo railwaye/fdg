@@ -1,0 +1,598 @@
+<Html>
+   <head>
+      <title>JARVIS AI Tatkal Autofill</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <style>
+         html { min-width: 750px; max-width: 100%; position: relative; vertical-align: middle; background: #B0E0E6; }
+         form { max-width: 1000px; margin: 5px auto; padding: 5px 10px; border-radius: 4px; }
+         label { color: black; font-weight: light; padding: 4px; text-transform: capitalize; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 16px; }
+         body { margin: 0; padding: 0; border: .5px solid black; border-radius: 0.5rem; font-family: 'Nunito', sans-serif; }
+         fieldset { border-radius: 3px; margin-bottom: 2px; border: 1.5px solid black; border-top: 1.5px solid black; border-right: 1.5px solid black; border-bottom: 1.5px solid black; border-left: 1.5px solid black; }
+         legend { font-size: 1.4em; margin-bottom: 5px; }
+         .number { background-color: #5fcf80; color: #fff; height: 25px; width: 25px; display: inline-block; font-size: 0.8em; margin-right: 4px; line-height: 25px; text-align: center; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2); border-radius: 100%; }
+         input[type="text"], input[type="password"], input[type="date"], input[type="number"], select { background: rgba(255, 255, 255, 0.1); border-radius: 3px; border: none; font-size: 15px; height: auto; margin: 0; outline: 0; height: auto; background-color: white; color: black; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset; padding: 1px; }
+         h2 { text-align: center; }
+         h1, h3 { text-align: center; }
+         .registerbtn { color: white; font-size: 15px; padding: 8px 15px 8px 15px; margin: 8px 0; border: 2px; cursor: pointer; width: 19.5%; opacity: 0.8; border-radius: 5px; }
+         .registerbtn:hover { opacity: 1; }
+         .dropdown-list { list-style-type: none; padding: 0px; margin: 0px; margin-top: 1px; border-radius: 4px; max-height: 180px; overflow: auto; box-shadow: 1px 1px 1px 0 #bdbdbd; }
+         .dropdown-list-item { background-color: white; padding: 6px 4px; font-size: 14px; }
+         .dropdown-list-item:hover { background-color: rgb(255, 237, 237); cursor: pointer; }
+         .dropdown-list { display: none; }
+         .dropdown:focus-within .dropdown-list, .dropdown-list:hover, .dropdown-list:focus, .dropdown-list:focus-within { display: block; }
+         .flex { display: flex; }
+         .flex-col { flex-direction: column; }
+         .w-full { width: 50%; }
+         .field-group { border: 1.5px solid black; border-top: none; margin: 20px 1px; padding: 6px; border-radius: 3px; margin-bottom: 2px; }
+         .field-group h1 { font: 19px verdana; margin: -15px -5px 0; }
+         .field-group h1 span { float: left; }
+         .field-group h1:before { border-top: 1.5px solid black; content: ' '; float: left; margin: 9px 3px 0 -1px; width: 16px; }
+         .field-group h1:after { border-top: 1.5px solid black; content: ' '; display: block; height: 24px; left: 3px; margin: 0 1px 0 0; overflow: hidden; position: relative; top: 9px; border-radius: 2px; }
+         input:focus, button:focus, select:focus { outline: 1px solid blue }
+         .autocomplete { /*the container must be positioned relative:*/ position: relative; display: inline-block; }
+         .autocomplete-items { position: absolute; border: 1px solid #d4d4d4; border-bottom: none; border-top: none; z-index: 99; top: 100%; left: 0; right: 0; max-height: 180px; overflow: auto; box-shadow: 1px 1px 1px 0 #bdbdbd; }
+         .autocomplete-items div { padding: 10px; cursor: pointer; background-color: #fff; border-bottom: 1px solid #d4d4d4; }
+         .autocomplete-items div:hover { /*when hovering an item:*/ background-color: #e9e9e9; }
+         .autocomplete-active { /*when navigating through the items using the arrow keys:*/ background-color: DodgerBlue !important; color: #ffffff; }
+         
+         /* Style for the header and clock */
+         .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Align items to the start */
+            padding-bottom: 5px; 
+         }
+         .icon-container {
+            margin-right: 10px; 
+         }
+         .title-clock-container {
+            display: flex;
+            flex-direction: column; /* Title above version */
+            /* margin-left: 25%; /* REMOVED: Title block will now be next to icon */
+         }
+         .main-title-and-clock {
+            display: flex;
+            align-items: center; 
+         }
+         .main-title {
+            color: #0D47A1;
+            margin: 0;
+            font-size: 30px; 
+            font-weight: bold;
+            margin-right: 15px; /* Space between title and clock */
+            white-space: nowrap; 
+         }
+         .timer-clock {
+            font-size: 22px; 
+            font-family: 'Orbitron', sans-serif; 
+            color: #ffffff; 
+            background: linear-gradient(135deg, #4e73df 0%, #1cc88a 100%); 
+            padding: 6px 12px;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15), inset 0 -2px 2px rgba(0,0,0,0.1);
+            min-width: 110px; 
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
+            margin-right: 20px; /* ADDED: Space between clock and "Open in New Tab" button */
+         }
+         .version-container-style { 
+             padding-left: 0; 
+             font-size: 15px;
+             font-weight: bold;
+             color: #555;
+             margin-top: 2px; 
+         }
+         .new-tab-button-container {
+            margin-left: auto; 
+            padding-left: 15px; /* Minimal padding if title/clock is very wide */
+         }
+         .new-tab-button { 
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0px;
+            text-align: center;
+         }
+         .new-tab-button img {
+            width: 38px; 
+            display: block;
+            margin: 0 auto 2px;
+         }
+         .new-tab-button p {
+            margin:0px; 
+            font-size: 11px;
+            color: #333;
+         }
+
+      </style>
+      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+     <script src="qrcode.min.js"></script>
+   </head>
+   <body>
+      <form>
+        
+         <div class="header-container">
+            <div class="icon-container">
+                <img style="width: 65px; height: 65px; border-radius: 15%;" src="rail_128.jpeg" alt="Extension Icon" srcset=""> 
+            </div>
+            <div class="title-clock-container">
+                <div class="main-title-and-clock">
+                    <p class="main-title">JARVIS AI Tatkal Autofill</p>
+                    <div id="timerClock" class="timer-clock">00:00:00</div>
+                </div>
+               <div id="versionContainer" class="version-container-style"></div> 
+            </div>
+            <div class="new-tab-button-container">
+                <button id="openPopupTab" class="new-tab-button">
+                   <img src="new-tab-icon.png" alt="new-tab-icon"> 
+                   <p>Open in New Tab</p>
+                </button>
+            </div>
+            <script src="main.js"></script> 
+         </div>
+         <div style="display: none;" id="dvMain">
+        <div id="notice-container" hidden style="padding: 10px; margin: 10px 0; background: #B0E0E6; border-left: 4px solid #B0E0E6; font-family: sans-serif;">
+    </div>
+         <div class="field-group" style="padding-bottom: 0px;">
+            <h1> <span>License details</span></h1>
+            <p style="margin: 4px;">Left Days: <span id="UserPlanExpairy"></span></p> 
+         </div>
+         <div class="field-group">
+    <h1> <span>IRCTC credentials</span></h1>
+    <label> Username </label> <input type="text" id="irctc-login" name="irctc-login" size="15" /> <label> Password </label> <input id="irctc-password" name="irctc-password" type="password" size="15" /> <input type="checkbox" id="showirctcpswd">Show Password <br> <label> <input type="checkbox" id="clearCheckbox"> Login Manually (Best for Bypass Login issue) </label> 
+
+    <div style="text-align: right; margin-top: 5px;">
+        <button type="button" id="save-irctc" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px;">Save Section</button>
+        <button type="button" id="clear-irctc" style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px; margin-left: 5px;">Clear Section</button>
+    </div>
+    </div>
+         <div class="field-group">
+            <h1> <span>Journey Details</span></h1>
+            <div class="autocomplete"> <label> Source</label> <input type="text" id="from-station-input" name="from-station" size="30" placeholder="Type station name or station code" /> <label> Destination </label> <input type="text" id="destination-station-input" name="destination-station" size="30" placeholder="Type station name or station code" /> </div>
+            </br> </br> <label>Date</label> <input id="journey-date" name="journey-date" type="date" /> 
+            
+            <div class="autocomplete"> 
+    <label> Train no. </label> 
+    <input type="text" id="train-no" name="train-no" size="30" placeholder="Type train no. or name" />
+    
+    <button type="button" id="search-trains-btn" style="background-color:#007bff; color:white; padding: 6px 12px; border-radius:4px; border:none; cursor:pointer; font-size: 14px; vertical-align: middle;">Search</button>
+</div>
+
+
+
+            </br> </br> <label> Class </label> 
+            <select name="class" id="journey-class-input">
+               <option value="">All Classes</option>
+               <option value="1A">AC First Class (1A)</option>
+               <option value="2A">AC 2 Tier (2A)</option>
+               <option value="3A">AC 3 Tier (3A)</option>
+               <option value="SL">Sleeper (SL)</option>
+               <option value="3E">AC 3 Economy (3E)</option>
+               <option value="CC">AC Chair car (CC)</option>
+               <option value="2S">Second Sitting (2S)</option>
+               <option value="EV">Vistadome AC (EV)</option>
+               <option value="EC">Exec. Chair Car (EC)</option>
+               <option value="EA">Anubhuti Class (EA)</option>
+               <option value="FC">First Class (FC)</option>
+               <option value="VC">Vistadome Chair Car(VC)</option>
+               <option value="VS">Visatodome Non Ac (VS)</option>
+            </select>
+            <label> Quota </label> 
+            <select name="Quota" id="quota-input">
+               <option value="GN">GENERAL</option>
+               <option value="TQ">TATKAL</option>
+               <option value="PT">PREMIUM TATKAL</option>
+               <option value="LD">LADIES</option>
+               <option value="SR">LOWER BERTH/SR.CITIZEN</option>
+            </select>
+            </br> </br> 
+            <div class="autocomplete"> <label> Boarding Station </label> <input type="text" id="boarding-station-input" name="boarding-station" size="30" placeholder="Only required if other than source station." /> </br> </div>
+            <br><br> <label>Availability check</label> <input id="AvailabilityCheck-1" value="A" name="AvailabilityCheck" type="radio" /> Click automatically <input id="AvailabilityCheck-2" value="M" name="AvailabilityCheck" type="radio" /> Click Manually <input id="AvailabilityCheck-3" value="I" name="AvailabilityCheck" type="radio" /> Click Immediately <br><br> <label>Auto click time SL</label> <input type="text" id="slbooktime" name="slbooktime" size="4" value="10:59:59" /> <label>AC&nbsp;</label><input type="text" id="acbooktime" name="acbooktime" size="4" value="09:59:59" /> <label>GN&nbsp;</label><input type="text" id="gnbooktime" name="gnbooktime" size="4" value="07:59:59" /> 
+            <div style="text-align: right; margin-top: 5px;">
+        <button type="button" id="save-journey" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px;">Save Section</button>
+        <button type="button" id="clear-journey" style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px; margin-left: 5px;">Clear Section</button>
+    </div>
+
+</div>
+         <div class="field-group">
+   <h1> <span>Passenger Details</span></h1>
+   
+   <div id="passenger-row-1">
+      <label> Psg 1 </label> <input type="text" id="passenger-name-1" name="name" size="16" placeholder="Name" maxlength="16" /> <input type="text" id="age-1" name="age" size="5" placeholder="Age" /> 
+      <select name="gender" id="passenger-gender-1">
+         <option value="">Gender</option>
+         <option value="M">Male</option>
+         <option value="F">Female</option>
+      </select>
+      <select name="berth" id="passenger-berth-1">
+         <option value="">Berth</option>
+         <option value="UB">Upper</option>
+         <option value="LB">Lower</option>
+         <option value="MB">Middle</option>
+         <option value="SL">Side Lower</option>
+         <option value="SU">Side Upper</option>
+         <option value="WS">Window Side</option>
+         <option value="CB">Cabin</option>
+         <option value="CP">Coupe</option>
+         <option value="SM">Side Middle</option>
+      </select>
+      <select name="food" id="passenger-food-1">
+         <option value="">Food Choice</option>
+         <option value="V">Veg</option>
+         <option value="N">Non Veg</option>
+         <option value="D">No Food</option>
+      </select>
+      <input id="passengerchildberth1" name="passengerchildberth" type="checkbox" /><label>Half seat</label> <br> 
+   </div>
+
+   <div id="passenger-row-2">
+      <label> Psg 2 </label> <input type="text" id="passenger-name-2" name="name" size="16" placeholder="Name" maxlength="16" /> <input type="text" id="age-2" name="age" size="5" placeholder="Age" /> 
+      <select name="gender" id="passenger-gender-2">
+         <option value="">Gender</option>
+         <option value="M">Male</option>
+         <option value="F">Female</option>
+      </select>
+      <select name="berth" id="passenger-berth-2">
+         <option value="">Berth</option>
+         <option value="UB">Upper</option>
+         <option value="LB">Lower</option>
+         <option value="MB">Middle</option>
+         <option value="SL">Side Lower</option>
+         <option value="SU">Side Upper</option>
+         <option value="WS">Window Side</option>
+         <option value="CB">Cabin</option>
+         <option value="CP">Coupe</option>
+         <option value="SM">Side Middle</option>
+      </select>
+      <select name="food" id="passenger-food-2">
+         <option value="">Food Choice</option>
+         <option value="V">Veg</option>
+         <option value="N">Non Veg</option>
+         <option value="D">No Food</option>
+      </select>
+      <input id="passengerchildberth2" name="passengerchildberth" type="checkbox" /><label>Half seat</label> <br> 
+   </div>
+
+   <div id="passenger-row-3">
+      <label> Psg 3 </label> <input type="text" id="passenger-name-3" name="name" placeholder="Name" size="16" maxlength="16" /> <input type="text" id="age-3" name="age" size="5" placeholder="Age" /> 
+      <select name="gender" id="passenger-gender-3">
+         <option value="">Gender</option>
+         <option value="M">Male</option>
+         <option value="F">Female</option>
+      </select>
+      <select name="berth" id="passenger-berth-3">
+         <option value="">Berth</option>
+         <option value="UB">Upper</option>
+         <option value="LB">Lower</option>
+         <option value="MB">Middle</option>
+         <option value="SL">Side Lower</option>
+         <option value="SU">Side Upper</option>
+         <option value="CB">Cabin</option>
+         <option value="CP">Coupe</option>
+         <option value="SM">Side Middle</option>
+      </select>
+      <select name="food" id="passenger-food-3">
+         <option value="">Food Choice</option>
+         <option value="V">Veg</option>
+         <option value="N">Non Veg</option>
+         <option value="D">No Food</option>
+      </select>
+      <input id="passengerchildberth3" name="passengerchildberth" type="checkbox" /><label>Half seat</label> <br> 
+   </div>
+
+   <div id="passenger-row-4">
+      <label> Psg 4 </label> <input type="text" id="passenger-name-4" name="name" size="16" placeholder="Name" maxlength="16" /> <input type="text" id="age-4" name="age" size="5" placeholder="Age" /> 
+      <select name="gender" id="passenger-gender-4">
+         <option value="">Gender</option>
+         <option value="M">Male</option>
+         <option value="F">Female</option>
+      </select>
+      <select name="berth" id="passenger-berth-4">
+         <option value="">Berth</option>
+         <option value="UB">Upper</option>
+         <option value="LB">Lower</option>
+         <option value="MB">Middle</option>
+         <option value="SL">Side Lower</option>
+         <option value="SU">Side Upper</option>
+         <option value="CB">Cabin</option>
+         <option value="CP">Coupe</option>
+         <option value="SM">Side Middle</option>
+      </select>
+      <select name="food" id="passenger-food-4">
+         <option value="">Food Choice</option>
+         <option value="D">No Food</option>
+         <option value="V">Veg</option>
+         <option value="N">Non Veg</option>
+      </select>
+      <input id="passengerchildberth4" name="passengerchildberth" type="checkbox" /><label>Half seat</label> <br> 
+   </div>
+
+   <div id="passenger-row-5">
+      <label> Psg 5 </label> <input type="text" id="passenger-name-5" name="name" size="16" placeholder="Name" maxlength="16" /> <input type="text" id="age-5" name="age" size="5" placeholder="Age" /> 
+      <select name="gender" id="passenger-gender-5">
+         <option value="">Gender</option>
+         <option value="M">Male</option>
+         <option value="F">Female</option>
+      </select>
+      <select name="berth" id="passenger-berth-5">
+         <option value="">Berth</option>
+         <option value="UB">Upper</option>
+         <option value="LB">Lower</option>
+         <option value="MB">Middle</option>
+         <option value="SL">Side Lower</option>
+         <option value="SU">Side Upper</option>
+         <option value="CB">Cabin</option>
+         <option value="CP">Coupe</option>
+         <option value="SM">Side Middle</option>
+      </select>
+      <select name="food" id="passenger-food-5">
+         <option value="">Food Choice</option>
+         <option value="D">No Food</option>
+         <option value="V">Veg</option>
+         <option value="N">Non Veg</option>
+      </select>
+      <input id="passengerchildberth5" name="passengerchildberth" type="checkbox" /><label>Half seat</label> <br> 
+   </div>
+
+   <div id="passenger-row-6">
+      <label> Psg 6 </label> <input type="text" id="passenger-name-6" name="name" size="16" placeholder="Name" maxlength="16" /> <input type="text" id="age-6" name="age" size="5" placeholder="Age" /> 
+      <select name="gender" id="passenger-gender-6">
+         <option value="">Gender</option>
+         <option value="M">Male</option>
+         <option value="F">Female</option>
+      </select>
+      <select name="berth" id="passenger-berth-6">
+         <option value="">Berth</option>
+         <option value="UB">Upper</option>
+         <option value="LB">Lower</option>
+         <option value="MB">Middle</option>
+         <option value="SL">Side Lower</option>
+         <option value="SU">Side Upper</option>
+         <option value="CB">Cabin</llabel>
+         <option value="CP">Coupe</option>
+         <option value="SM">Side Middle</option>
+      </select>
+      <select name="food" id="passenger-food-6">
+         <option value="">Food Choice</option>
+         <option value="D">No Food</option>
+         <option value="V">Veg</option>
+         <option value="N">Non Veg</option>
+      </select>
+      <input id="passengerchildberth6" name="passengerchildberth" type="checkbox" /><label>Half seat</label> <br> 
+   </div>
+   
+   <div style="text-align: right; margin-top: 5px;">
+      <button type="button" id="save-passenger" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px;">Save Section</button>
+      <button type="button" id="clear-passenger" style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px; margin-left: 5px;">Clear Section</button>
+   </div>
+</div>
+         <div class="field-group">
+            <h1> <span>Infant Without Berth</span></h1>
+            </legend> <label> Infant 1 </label> <input type="text" id="Infant-name-1" name="name" size="16" placeholder="Name" maxlength="16" /> 
+            <select name="age" id="Infant-age-1">
+               <option value="0">Below one year</option>
+               <option value="1">One year</option>
+               <option value="2">Two years</option>
+               <option value="3">Three years</option>
+               <option value="4">Four years</option>
+            </select>
+            <select name="gender" id="Infant-gender-1">
+               <option value="">Gender</option>
+               <option value="M">Male</option>
+               <option value="F">Female</option>
+            </select>
+            <br> <label> Infant 2 </label> <input type="text" id="Infant-name-2" name="name" size="16" placeholder="Name" maxlength="16" /> 
+            <select name="age" id="Infant-age-2">
+               <option value="0">Below one year</option>
+               <option value="1">One year</option>
+               <option value="2">Two years</option>
+               <option value="3">Three years</option>
+               <option value="4">Four years</option>
+            </select>
+            <select name="gender" id="Infant-gender-2">
+               <option value="">Gender</option>
+               <option value="M">Male</option>
+               <option value="F">Female</option>
+            </select>
+         </div>
+         <div class="field-group">
+            <h1> <span>Payment choice</span></h1>
+            <label>Mode</label> 
+            <select name="paymentMethod" id="paymentMethod">
+               <option value="HDFCDB">HDFC CARD (Bypassed)</option>
+               <option value="irctc_dc">IPAY DC</option>
+               <option value="kotak_dc">KOTAK DC</option>
+               <option value="icici_dc">ICICI DC</option>
+               <option value="SBINETBANKING">SBI NETBANKING</option>
+               <option value="HDFCNETBANKING">ICICI NETBANKING</option>
+               <option value="IRCUPIQR">Irctc QR</option>
+               <option value="IRCUPIID">Irctc UPI ID</option>
+               <option value="IRCWA">Irctc e-Wallet</option>
+               <option value="PAYTMUPIQR">Paytm QR</option>
+               <option value="PAYTMUPIID">Paytm UPI ID</option>
+               <option value="PHONEPEUPIQR">PhonePe QR</option>
+               <option value="RAZORPAYUPI">RazorPay UPI ID</option>
+               <option value="PAYUUPIID">PayU UPI ID</option>
+               <option value="AMZPAYWAL">Amazon Pay Wallet</option>
+               <option value="MOBIKWIKWAL">Mobikwik Wallet</option>
+            </select>
+            <label>UPI ID</label><input type="text" id="vpa" name="vpa" size="30" placeholder="e.g. 9329xxxx45@paytm" /> 
+            <div id="carddetails">
+               <br> <label>Card</label><input type="text" id="cardnumber" name="cardnumber" size="23" placeholder="1234 1234 1234 1234" maxlength="23"> <input type="text" id="cardexpiry" name="cardexpiry" size="5" maxlength="5" placeholder="MM/YY"> <input type="text" id="cardcvv" name="cardcvv" size="3" maxlength="3" placeholder="CVV"> <input type="text" id="cardholder" name="cardholder" size="16" maxlength="16" placeholder="Name on Card"><input type="checkbox" id="hideCardDetailsCheckbox" style="margin-left: 10px;">
+               <label for="hideCardDetailsCheckbox">Hide Details</label> <br><br>
+
+          <label>HDFC static(3d) Password</label><input type="password" id="staticpassword" name="staticpassword" size="23" placeholder="" maxlength="23"> <label>Show password</label><input id="showhdfcpass" name="showhdfcpass" type="checkbox" /> <br> <label> <input type="checkbox" id="submitBtn2autoClickCheckbox"> Auto Submit static Password </label> 
+
+                           <div style="display: inline-block; vertical-align: top; margin-left: 15px;">
+    <label for="backupPaymentMethod" style="display: block; margin-bottom: 5px;">Backup Payment</label>
+    <select name="backupPaymentMethod" id="backupPaymentMethod" style="min-width: 150px;">
+        <option value="">--None--</option>
+        <option value="IRCUPIID">IRCTC UPI ID</option>
+        <option value="IRCUPIQR">IRCTC QR</option>
+        <option value="irctc_dc">IPAY DC</option>
+    </select>
+</div>
+
+
+               <select name="cardtype" id="cardtype" hidden>
+                  <option value=""></option>
+                  <option value="0">VISA</option>
+                  <option value="1">Mastercard</option>
+                  <option value="2">RuPay</option>
+               </select>
+            </div>
+
+
+            <div id="sbi_details" style="display: none;">
+               <br>
+               <label>SBI Username</label>
+               <input type="text" id="sbi_username" name="sbi_username" size="20" placeholder="SBI Netbanking Username">
+               
+               <label>SBI Password</label>
+               <input type="password" id="sbi_password" name="sbi_password" size="20" placeholder="SBI Netbanking Password">
+               
+               <input type="checkbox" id="showsbi_pass">
+               <label for="showsbi_pass">Show Password</label>
+            </div>
+
+           <div id="hdfc_details" style="display: none;">
+               <br>
+               <label>ICICI Username</label>
+               <input type="text" id="hdfc_username" name="hdfc_username" size="20" placeholder="ICICI Netbanking Username">
+               
+               <label>ICICI Password</label>
+               <input type="password" id="hdfc_password" name="hdfc_password" size="20" placeholder="ICICI Netbanking Password">
+               
+               <input type="checkbox" id="showhdfc_pass">
+               <label for="showhdfc_pass">Show Password</label>
+            </div>
+
+
+
+
+          <div id="mobikwik_details" style="display: none;">
+               <br>
+               <label>Mobikwik Registered Mobile</label>
+               <input type="text" id="mobikwik_mobile" name="mobikwik_mobile" size="15" placeholder="Enter 10-digit mobile no." maxlength="10">
+            </div>
+
+             <div style="text-align: right; margin-top: 5px;">
+        <button type="button" id="save-payment" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px;">Save Section</button>
+        <button type="button" id="clear-payment" style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; border: none; cursor: pointer; font-size: 12px; margin-left: 5px;">Clear Section</button>
+    </div>
+
+
+
+         </div>
+         <div class="field-group">
+            <h1> <span>Additional choice</span></h1>
+            <input id="autoCaptcha" name="autoCaptcha" type="checkbox" /> <label>Captcha Auto fill</label> <label>Captcha Submit mode</label> 
+            <select name="CaptchaSubmitMode" id="CaptchaSubmitMode">
+               <option value="A">Auto</option>
+               <option value="M">Manual</option>
+            </select>
+           
+
+           
+
+            <label for="sec-selection-delay">Sec Selection</label>
+<select name="secSelectionDelay" id="sec-selection-delay" style="vertical-align: middle;">
+    <option value="0">00</option>
+    <option value="1">01</option>
+    <option value="2">02</option>
+    <option value="3">03</option>
+    <option value="4">04</option>
+    <option value="5">05</option>
+    <option value="6">06</option>
+    <option value="7">07</option>
+    <option value="8">08</option>
+    <option value="9">09</option>
+    <option value="10">10</option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+    <option value="13">13</option>
+    <option value="14">14</option>
+    <option value="15">15</option>
+    <option value="16">16</option>
+    <option value="17">17</option>
+    <option value="18">18</option>
+    <option value="19">19</option>
+    <option value="20">20</option>
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <br><br> <input id="psgManual" name="psgManual" type="checkbox" /> <label>Submit Passenger page manually</label> <input id="paymentManual" name="paymentManual" type="checkbox" /> <label>Submit Payment page manually</label> <br><br> <input id="autoUpgradation" name="autoUpgradation" type="checkbox" /> <label>Consider Auto Upgradation</label> <input id="confirmberths" name="confirmberths" type="checkbox" /> <label>Book only if confirm berths are allotted.</label> <label>Travel insurance</label> <input id="travelInsuranceOpted-1" value="yes" name="travelInsuranceOpted" type="radio" /> Yes <input id="travelInsuranceOpted-2" value="no" name="travelInsuranceOpted" type="radio" /> No <br><br> <label>Reservation choice</label> 
+            <select name="reservationchoice" id="reservationchoice" style="max-width: 250px;">
+               <option value="Reservation Choice">Reservation Choice</option>
+               <option value="Book, only if all berths are allotted in same coach.">Book, only if all berths are allotted in same coach.</option>
+               <option value="Book, only if at least 1 lower berth is allotted.">Book, only if at least 1 lower berth is allotted.</option>
+               <option value="Book, only if 2 lower berths are allotted.">Book, only if 2 lower berths are allotted. </option>
+            </select>
+            <br><br> <label>Preferred Coach No. </label> <input type="text" id="prefcoach" name="prefcoach" placeholder="" size="5" maxlength="5" /> <label> Mobile number</label> <input type="text" id="mobileNumber" name="mobileNumber" size="10" maxlength="10" /> 
+            
+            <button type="button" id="show-qr-btn" style="background-color: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 10px; vertical-align: middle;">OTP QR</button>
+            <input hidden type="text" id="tokenString" name="tokenString" /> <input hidden type="text" id="projectId" name="projectId" /> 
+         </div>
+
+         <div class="field-group">
+            <h1> <span>Fare Limit</span></h1>
+            <input id="enableFareLimit" name="enableFareLimit" type="checkbox" /> <label>Enable Fare Limit Check</label>
+            <br><br>
+            <label>Max Fare:</label> <input type="number" id="maxFareAmount" name="maxFareAmount" size="10" placeholder="e.g. 1500" />
+            <br><br>
+            <input id="bookInPopup" name="bookInPopup" type="checkbox" /> <label>Book in Popup Window</label>
+         </div>
+         
+         <div class="field-group">
+            <h1> <span>Proxy Settings</span></h1>
+            <label>
+                <input type="radio" name="proxySelection" value="disabled" checked> Disable Proxy
+            </label>
+            <br><br>
+            <div id="proxy-list">
+                </div>
+         </div>
+         <br> 
+         <button type="button" id="submit-btn" class="registerbtn" style="background-color:Green; color: white; border-radius: 50px;">Save</button>
+         <button type="button" id="clear-btn" class="registerbtn" style="background-color:Red; color: white; border-radius: 50px;">Clear</button> 
+         <button type="button" id="connect-btn" class="registerbtn" style="background-color:DarkOrange; color: white; border-radius: 50px;"><i id="loader"></i>Book</button> 
+         <button type="button" id="load-btn-1" class="registerbtn" style="background-color:DarkViolet; color: white; border-radius: 50px;">Buy plan</button>
+         <button type="button" id="OpenSite" class="registerbtn" style="background-color:#0D47A1; color: white; border-radius: 50px;">Website</button> 
+         </div>
+         <div id="dvRegister">
+            <div class="field-group" style="padding-bottom: 0px;text-align: center;">
+            <h1> <span>Enter your key</span></h1>
+            <label><b> Key </b></label> <input type="text" id="subscriber-key" name="subscriber-key" size="15" style="border: 1px solid;height: 32px;" /> 
+            <button type="button" id="login-btn" class="registerbtn" style="background-color:Green; color: white; width: auto; padding: 8px 15px; margin-right:5px; border-radius: 50px;">Save</button> 
+            <button type="button" id="connect-btn-license" class="registerbtn" style="background-color:DarkOrange; color: white; width: auto; padding: 8px 15px; border-radius: 50px;"><i id="loader-license"></i>Book</button>
+            <p style="margin: 4px;"><span style="color: red;" id="dvMessage"></span></p> 
+            </div>
+         </div>
+
+        <div id="qr-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:10001;">
+    <div style="background:white; padding:25px; border-radius:10px; text-align:center;">
+        <h3 style="margin-top:0; margin-bottom:15px; font-size:18px;">Scan with your App</h3>
+        <div id="qrcode"></div>
+        <button id="close-qr-btn" style="margin-top:20px; padding: 8px 16px; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+      </form>
+      <script src="popup.js"></script>
+      <script src="train_search.js"></script> 
+      </body>
+</html>
